@@ -1,4 +1,4 @@
-module qdcommon
+module github.com/gustavo-m-franco/qd-common
 
 go 1.21.2
 

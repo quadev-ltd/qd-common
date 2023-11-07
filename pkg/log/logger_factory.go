@@ -4,7 +4,8 @@ import (
 	"context"
 	"errors"
 	"os"
-	"qdcommon/pkg/config"
+
+	"github.com/gustavo-m-franco/qd-common/pkg/config"
 
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/metadata"
