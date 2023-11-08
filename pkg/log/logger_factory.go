@@ -2,13 +2,11 @@ package log
 
 import (
 	"context"
-	"errors"
 	"os"
 
 	"github.com/gustavo-m-franco/qd-common/pkg/config"
 
 	"github.com/rs/zerolog"
-	"google.golang.org/grpc/metadata"
 )
 
 // CorrelationIDKey is the key of the correlation ID in the metadata
@@ -53,21 +51,14 @@ func (logFactory *LogFactory) NewLogger() Loggerer {
 // NewLoggerWithCorrelationID creates a new logger with the correlation ID
 func (logFactory *LogFactory) NewLoggerWithCorrelationID(ctx context.Context) (Loggerer, error) {
 	var log zerolog.Logger = zerolog.New(os.Stdout).With().Timestamp().Logger()
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		log.Error().Msg("Metadata not found in context")
-		return nil, errors.New("Metadata not found in context")
+	correlationID, error := GetCorrelationIDFromContext(ctx)
+	if error != nil {
+		return nil, error
 	}
-	correlationIDs, exists := md[CorrelationIDKey]
-	if !exists || len(correlationIDs) != 1 {
-		log.Error().Msg("Correlation ID not found in metadata")
-		return nil, errors.New("Correlation ID not found in metadata")
-	}
-	correlationID := correlationIDs[0]
 	log = setUpLevel(
 		log,
 		logFactory.environment,
-	).With().Str(CorrelationIDKey, correlationID).Logger()
+	).With().Str(CorrelationIDKey, *correlationID).Logger()
 	return &Logger{
 		log: log,
 	}, nil

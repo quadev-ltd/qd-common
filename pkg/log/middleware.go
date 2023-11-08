@@ -2,6 +2,7 @@ package log
 
 import (
 	"context"
+	"errors"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -49,4 +50,16 @@ func AddCorrelationIDToContext(ctx context.Context, correlationID string) contex
 		CorrelationIDKey: correlationID,
 	})
 	return metadata.NewOutgoingContext(ctx, md)
+}
+
+func GetCorrelationIDFromContext(ctx context.Context) (*string, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, errors.New("Metadata not found in context")
+	}
+	correlationIDs, exists := md[CorrelationIDKey]
+	if !exists || len(correlationIDs) != 1 {
+		return nil, errors.New("Correlation ID not found in metadata")
+	}
+	return &correlationIDs[0], nil
 }
