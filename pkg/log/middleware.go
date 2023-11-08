@@ -5,6 +5,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -39,4 +40,13 @@ func GetLoggerFromContext(ctx context.Context) Loggerer {
 		return logger
 	}
 	return nil
+}
+
+// TODO unit test
+// AddCorrelationIDToContext adds the correlation ID to the context
+func AddCorrelationIDToContext(ctx context.Context, correlationID string) context.Context {
+	md := metadata.New(map[string]string{
+		CorrelationIDKey: correlationID,
+	})
+	return metadata.NewOutgoingContext(ctx, md)
 }
