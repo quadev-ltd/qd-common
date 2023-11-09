@@ -5,9 +5,7 @@ import (
 	"errors"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 )
 
 type loggerKey string
@@ -28,7 +26,7 @@ func CreateLoggerInterceptor(
 	) (interface{}, error) {
 		logger, err := logFactory.NewLoggerWithCorrelationID(ctx)
 		if err != nil {
-			return nil, status.Errorf(codes.Internal, "Internal server error. Dubious request")
+			return nil, err
 		}
 		newCtx := context.WithValue(ctx, LoggerKey, logger)
 		return handler(newCtx, req)
