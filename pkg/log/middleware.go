@@ -14,9 +14,11 @@ type loggerKey string
 const LoggerKey loggerKey = "logger"
 
 // TODO unit test
-// LoggerInterceptor is the interceptor for the logger
+
+// CreateLoggerInterceptor is the interceptor that intercepts the gRPC
+// calls and adds a logger with a correlation ID to the context
 func CreateLoggerInterceptor(
-	logFactory LogFactoryer,
+	logFactory Factoryer,
 ) grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
@@ -42,6 +44,7 @@ func GetLoggerFromContext(ctx context.Context) Loggerer {
 }
 
 // TODO unit test
+
 // AddCorrelationIDToContext adds the correlation ID to the context
 func AddCorrelationIDToContext(ctx context.Context, correlationID string) context.Context {
 	md := metadata.New(map[string]string{
@@ -50,6 +53,7 @@ func AddCorrelationIDToContext(ctx context.Context, correlationID string) contex
 	return metadata.NewOutgoingContext(ctx, md)
 }
 
+// GetCorrelationIDFromContext returns the correlation ID obtained from the context
 func GetCorrelationIDFromContext(ctx context.Context) (*string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {

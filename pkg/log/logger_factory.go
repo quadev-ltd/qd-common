@@ -4,33 +4,33 @@ import (
 	"context"
 	"os"
 
-	"github.com/gustavo-m-franco/qd-common/pkg/config"
-
 	"github.com/rs/zerolog"
+
+	"github.com/gustavo-m-franco/qd-common/pkg/config"
 )
 
 // CorrelationIDKey is the key of the correlation ID in the metadata
 const CorrelationIDKey = "correlation_id"
 
-// LogFactoryer	is the interface for creating a logger
-type LogFactoryer interface {
+// Factoryer is the interface for creating a log factory to create a logger
+type Factoryer interface {
 	NewLogger() Loggerer
 	NewLoggerWithCorrelationID(ctx context.Context) (Loggerer, error)
 }
 
-// LogFactory is the factory for creating a logger
-type LogFactory struct {
+// Factory is the factory for creating a logger
+type Factory struct {
 	environment string
 }
 
 // NewLogFactory creates a new log factory
-func NewLogFactory(environment string) LogFactoryer {
-	return &LogFactory{
+func NewLogFactory(environment string) Factoryer {
+	return &Factory{
 		environment: environment,
 	}
 }
 
-func setUpLevel(log zerolog.Logger, environment string) zerolog.Logger {
+func setUpLog(log zerolog.Logger, environment string) zerolog.Logger {
 	if environment == config.ProductionEnvironment {
 		log = log.Level(zerolog.WarnLevel)
 	} else {
@@ -40,22 +40,22 @@ func setUpLevel(log zerolog.Logger, environment string) zerolog.Logger {
 }
 
 // NewLogger creates a new logger for the given environment
-func (logFactory *LogFactory) NewLogger() Loggerer {
+func (logFactory *Factory) NewLogger() Loggerer {
 	var log zerolog.Logger = zerolog.New(os.Stdout).With().Timestamp().Logger()
-	log = setUpLevel(log, logFactory.environment)
+	log = setUpLog(log, logFactory.environment)
 	return &Logger{
 		log: log,
 	}
 }
 
 // NewLoggerWithCorrelationID creates a new logger with the correlation ID
-func (logFactory *LogFactory) NewLoggerWithCorrelationID(ctx context.Context) (Loggerer, error) {
+func (logFactory *Factory) NewLoggerWithCorrelationID(ctx context.Context) (Loggerer, error) {
 	var log zerolog.Logger = zerolog.New(os.Stdout).With().Timestamp().Logger()
 	correlationID, error := GetCorrelationIDFromContext(ctx)
 	if error != nil {
 		return nil, error
 	}
-	log = setUpLevel(
+	log = setUpLog(
 		log,
 		logFactory.environment,
 	).With().Str(CorrelationIDKey, *correlationID).Logger()
