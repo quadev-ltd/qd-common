@@ -29,13 +29,13 @@ func CreateCACertificatePool() (*x509.CertPool, error) {
 }
 
 // CreateTLSListener creates a TLS listener
-func CreateTLSListener(grpcServerAddress, certFile, keyFile string) (net.Listener, error) {
+func CreateTLSListener(grpcServerAddress, certFilePath, keyFilePath string) (net.Listener, error) {
 	certPool, err := CreateCACertificatePool()
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create CA certificate pool: %v", err)
 	}
 
-	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+	cert, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("Could not load server key pair: %v", err)
 	}
