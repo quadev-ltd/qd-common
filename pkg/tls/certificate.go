@@ -1,8 +1,10 @@
 package tls
 
 import (
+	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	"net"
 	"os"
 )
 
@@ -20,4 +22,28 @@ func CreateCACertificatePool() (*x509.CertPool, error) {
 	}
 
 	return certPool, nil
+}
+
+func CreateTLSListener(grpcServerAddress, certFile, keyFile string) (net.Listener, error) {
+	certPool, err := CreateCACertificatePool()
+	if err != nil {
+		return nil, fmt.Errorf("Failed to create CA certificate pool: %v", err)
+	}
+
+	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+	if err != nil {
+		return nil, fmt.Errorf("Could not load server key pair: %v", err)
+	}
+
+	tlsConfig := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+		ClientCAs:    certPool,
+	}
+
+	listener, err := tls.Listen("tcp", grpcServerAddress, tlsConfig)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to listen: %v", err)
+	}
+
+	return listener, nil
 }
