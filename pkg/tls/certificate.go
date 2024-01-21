@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+// CreateCACertificatePool creates a certificate pool from the CA certificate
 func CreateCACertificatePool() (*x509.CertPool, error) {
 	// TODO: Set domain info in the config file
 	const caCertFile = "certs/ca.pem"
@@ -24,6 +25,7 @@ func CreateCACertificatePool() (*x509.CertPool, error) {
 	return certPool, nil
 }
 
+// CreateTLSListener creates a TLS listener
 func CreateTLSListener(grpcServerAddress, certFile, keyFile string) (net.Listener, error) {
 	certPool, err := CreateCACertificatePool()
 	if err != nil {
