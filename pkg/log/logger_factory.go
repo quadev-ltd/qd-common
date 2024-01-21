@@ -6,7 +6,7 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/gustavo-m-franco/qd-common/pkg/config"
+	"github.com/quadev-ltd/qd-common/pkg/config"
 )
 
 // CorrelationIDKey is the key of the correlation ID in the metadata

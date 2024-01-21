@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/gustavo-m-franco/qd-common/pkg/log/mock"
+	"github.com/quadev-ltd/qd-common/pkg/log/mock"
 )
 
 func TestGetLoggerFromContext(t *testing.T) {
