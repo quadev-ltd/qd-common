@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"net"
 	"os"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 // CreateCACertificatePool creates a certificate pool from the CA certificate
@@ -48,4 +51,29 @@ func CreateTLSListener(grpcServerAddress, certFile, keyFile string) (net.Listene
 	}
 
 	return listener, nil
+}
+
+func CreateTLSConfig() (*tls.Config, error) {
+	caCertPool, err := CreateCACertificatePool()
+	if err != nil {
+		return nil, fmt.Errorf("Could not create CA certificate pool: %v", err)
+	}
+	tlsConfig := &tls.Config{
+		RootCAs: caCertPool,
+	}
+
+	return tlsConfig, nil
+}
+
+func CreateGRPCConnection(grpcServerAddress string) (*grpc.ClientConn, error) {
+	tlsConfig, err := CreateTLSConfig()
+	if err != nil {
+		return nil, fmt.Errorf("Could not create CA certificate pool: %v", err)
+	}
+	creds := credentials.NewTLS(tlsConfig)
+	connection, err := grpc.Dial(grpcServerAddress, grpc.WithTransportCredentials(creds))
+	if err != nil {
+		return nil, fmt.Errorf("Could not connect to server: %v", err)
+	}
+	return connection, nil
 }
