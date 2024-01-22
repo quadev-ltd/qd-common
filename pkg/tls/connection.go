@@ -58,6 +58,7 @@ func CreateTLSListener(grpcServerAddress, certFilePath, keyFilePath string, tlsE
 	return listener, nil
 }
 
+// CreateTLSConfig creates a TLS config
 func CreateTLSConfig() (*tls.Config, error) {
 	caCertPool, err := CreateCACertificatePool()
 	if err != nil {
@@ -70,6 +71,7 @@ func CreateTLSConfig() (*tls.Config, error) {
 	return tlsConfig, nil
 }
 
+// CreateGRPCConnection creates a gRPC connection
 func CreateGRPCConnection(grpcServerAddress string, tlsEnabled bool) (*grpc.ClientConn, error) {
 	tlsConfig, err := CreateTLSConfig()
 	if err != nil {

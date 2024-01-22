@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// ChangeCurrentWorkingDirectory changes the current working directory to the desired one
 func ChangeCurrentWorkingDirectory(to string) (*string, error) {
 	// Save current working directory and change it
 	originalWD, err := os.Getwd()
