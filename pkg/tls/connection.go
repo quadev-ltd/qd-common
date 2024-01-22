@@ -29,23 +29,28 @@ func CreateCACertificatePool() (*x509.CertPool, error) {
 }
 
 // CreateTLSListener creates a TLS listener
-func CreateTLSListener(grpcServerAddress, certFilePath, keyFilePath string) (net.Listener, error) {
-	certPool, err := CreateCACertificatePool()
-	if err != nil {
-		return nil, fmt.Errorf("Failed to create CA certificate pool: %v", err)
-	}
+func CreateTLSListener(grpcServerAddress, certFilePath, keyFilePath string, tlsEnabled bool) (net.Listener, error) {
+	var err error
+	var listener net.Listener
+	if tlsEnabled {
+		certPool, err := CreateCACertificatePool()
+		if err != nil {
+			return nil, fmt.Errorf("Failed to create CA certificate pool: %v", err)
+		}
 
-	cert, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
-	if err != nil {
-		return nil, fmt.Errorf("Could not load server key pair: %v", err)
-	}
+		cert, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
+		if err != nil {
+			return nil, fmt.Errorf("Could not load server key pair: %v", err)
+		}
 
-	tlsConfig := &tls.Config{
-		Certificates: []tls.Certificate{cert},
-		ClientCAs:    certPool,
+		tlsConfig := &tls.Config{
+			Certificates: []tls.Certificate{cert},
+			ClientCAs:    certPool,
+		}
+		listener, err = tls.Listen("tcp", grpcServerAddress, tlsConfig)
+	} else {
+		listener, err = net.Listen("tcp", grpcServerAddress)
 	}
-
-	listener, err := tls.Listen("tcp", grpcServerAddress, tlsConfig)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to listen: %v", err)
 	}
@@ -65,13 +70,18 @@ func CreateTLSConfig() (*tls.Config, error) {
 	return tlsConfig, nil
 }
 
-func CreateGRPCConnection(grpcServerAddress string) (*grpc.ClientConn, error) {
+func CreateGRPCConnection(grpcServerAddress string, tlsEnabled bool) (*grpc.ClientConn, error) {
 	tlsConfig, err := CreateTLSConfig()
 	if err != nil {
 		return nil, fmt.Errorf("Could not create CA certificate pool: %v", err)
 	}
 	creds := credentials.NewTLS(tlsConfig)
-	connection, err := grpc.Dial(grpcServerAddress, grpc.WithTransportCredentials(creds))
+	var connection *grpc.ClientConn
+	if tlsEnabled {
+		connection, err = grpc.Dial(grpcServerAddress, grpc.WithTransportCredentials(creds))
+	} else {
+		connection, err = grpc.Dial("qd.authentication.api:9090", grpc.WithInsecure())
+	}
 	if err != nil {
 		return nil, fmt.Errorf("Could not connect to server: %v", err)
 	}
