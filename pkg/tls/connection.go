@@ -73,16 +73,17 @@ func CreateTLSConfig() (*tls.Config, error) {
 
 // CreateGRPCConnection creates a gRPC connection
 func CreateGRPCConnection(grpcServerAddress string, tlsEnabled bool) (*grpc.ClientConn, error) {
-	tlsConfig, err := CreateTLSConfig()
-	if err != nil {
-		return nil, fmt.Errorf("Could not create CA certificate pool: %v", err)
-	}
-	creds := credentials.NewTLS(tlsConfig)
+	var err error
 	var connection *grpc.ClientConn
 	if tlsEnabled {
+		tlsConfig, err := CreateTLSConfig()
+		if err != nil {
+			return nil, fmt.Errorf("Could not create CA certificate pool: %v", err)
+		}
+		creds := credentials.NewTLS(tlsConfig)
 		connection, err = grpc.Dial(grpcServerAddress, grpc.WithTransportCredentials(creds))
 	} else {
-		connection, err = grpc.Dial("qd.authentication.api:9090", grpc.WithInsecure())
+		connection, err = grpc.Dial(grpcServerAddress, grpc.WithInsecure())
 	}
 	if err != nil {
 		return nil, fmt.Errorf("Could not connect to server: %v", err)
