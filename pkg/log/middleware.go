@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -14,6 +16,18 @@ type loggerKey string
 const LoggerKey loggerKey = "logger"
 
 // TODO unit test
+
+// AddNewCorrelationIDToContext can ber used as a middleware that adds a new correlation ID to the context
+func AddNewCorrelationIDToContext(context *gin.Context) {
+	// Generate a random UUID
+	correlationID := uuid.New().String()
+
+	ctxWithCorrelationID := AddCorrelationIDToOutgoingContext(context.Request.Context(), correlationID)
+	context.Request = context.Request.WithContext(ctxWithCorrelationID)
+
+	// Continue processing the request
+	context.Next()
+}
 
 // CreateLoggerInterceptor is the interceptor that intercepts the gRPC
 // calls and adds a logger with a correlation ID to the context
@@ -45,12 +59,20 @@ func GetLoggerFromContext(ctx context.Context) Loggerer {
 
 // TODO unit test
 
-// AddCorrelationIDToContext adds the correlation ID to the context
-func AddCorrelationIDToContext(ctx context.Context, correlationID string) context.Context {
+// AddCorrelationIDToOutgoingContext adds the correlation ID to the context
+func AddCorrelationIDToOutgoingContext(ctx context.Context, correlationID string) context.Context {
 	md := metadata.New(map[string]string{
 		CorrelationIDKey: correlationID,
 	})
 	return metadata.NewOutgoingContext(ctx, md)
+}
+
+// AddCorrelationIDToIncomingContext adds the correlation ID to the context
+func AddCorrelationIDToIncomingContext(ctx context.Context, correlationID string) context.Context {
+	md := metadata.New(map[string]string{
+		CorrelationIDKey: correlationID,
+	})
+	return metadata.NewIncomingContext(ctx, md)
 }
 
 // GetCorrelationIDFromContext returns the correlation ID obtained from the context

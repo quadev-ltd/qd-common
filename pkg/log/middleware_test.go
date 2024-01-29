@@ -44,7 +44,7 @@ func TestAddCorrelationIDToContext(t *testing.T) {
 		ctx := context.Background()
 
 		// Call the function to add the correlation ID to the context
-		ctxWithCorrelationID := AddCorrelationIDToContext(ctx, correlationID)
+		ctxWithCorrelationID := AddCorrelationIDToOutgoingContext(ctx, correlationID)
 
 		// Retrieve the metadata from the context
 		md, ok := metadata.FromOutgoingContext(ctxWithCorrelationID)
