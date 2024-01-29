@@ -3,6 +3,8 @@ package log
 import (
 	"context"
 	"errors"
+	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -16,6 +18,25 @@ type loggerKey string
 const LoggerKey loggerKey = "logger"
 
 // TODO unit test
+// Create
+func CreateGinLoggerMiddleware(logFactory Factoryer) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Create a new context with the logger
+		logger, err := logFactory.NewLoggerWithCorrelationID(c.Request.Context())
+		if err != nil {
+			// Handle error if needed
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
+		newCtx := context.WithValue(c.Request.Context(), LoggerKey, logger)
+
+		// Set the new context in the Gin request
+		c.Request = c.Request.WithContext(newCtx)
+
+		// Continue processing the request
+		c.Next()
+	}
+}
 
 // AddNewCorrelationIDToContext can ber used as a middleware that adds a new correlation ID to the context
 func AddNewCorrelationIDToContext(context *gin.Context) {
@@ -57,7 +78,15 @@ func GetLoggerFromContext(ctx context.Context) Loggerer {
 	return nil
 }
 
-// TODO unit test
+// TransferCorrelationIdToOutgoingContext transfers the correlation ID from the incoming context to the outgoing context
+func TransferCorrelationIdToOutgoingContext(ctx context.Context) (context.Context, error) {
+	correlationID, err := GetCorrelationIDFromContext(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting correlation ID from context: %v", err)
+	}
+	newOutgoingCtx := AddCorrelationIDToOutgoingContext(ctx, *correlationID)
+	return newOutgoingCtx, nil
+}
 
 // AddCorrelationIDToOutgoingContext adds the correlation ID to the context
 func AddCorrelationIDToOutgoingContext(ctx context.Context, correlationID string) context.Context {
