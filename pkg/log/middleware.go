@@ -22,7 +22,7 @@ func AddNewCorrelationIDToContext(context *gin.Context) {
 	// Generate a random UUID
 	correlationID := uuid.New().String()
 
-	ctxWithCorrelationID := AddCorrelationIDToOutgoingContext(context.Request.Context(), correlationID)
+	ctxWithCorrelationID := AddCorrelationIDToIncomingContext(context.Request.Context(), correlationID)
 	context.Request = context.Request.WithContext(ctxWithCorrelationID)
 
 	// Continue processing the request
