@@ -78,8 +78,8 @@ func GetLoggerFromContext(ctx context.Context) Loggerer {
 	return nil
 }
 
-// TransferCorrelationIdToOutgoingContext transfers the correlation ID from the incoming context to the outgoing context
-func TransferCorrelationIdToOutgoingContext(ctx context.Context) (context.Context, error) {
+// TransferCorrelationIDToOutgoingContext transfers the correlation ID from the incoming context to the outgoing context
+func TransferCorrelationIDToOutgoingContext(ctx context.Context) (context.Context, error) {
 	correlationID, err := GetCorrelationIDFromContext(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("Error getting correlation ID from context: %v", err)

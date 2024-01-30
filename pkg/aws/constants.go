@@ -1,7 +1,7 @@
 package aws
 
 // AWSAppConfig is the configuration of the AWS AppConfig
-type AWSAppConfig struct {
+type AppConfig struct {
 	Region                 string
 	ApplicationID          string
 	EnvironmentID          string
@@ -9,7 +9,7 @@ type AWSAppConfig struct {
 }
 
 // DevConfig is the configuration for the development environment
-var DevConfig = AWSAppConfig{
+var DevConfig = AppConfig{
 	Region:                 "us-east-1",
 	ApplicationID:          "222hh4s",
 	EnvironmentID:          "i0lf5xh",
