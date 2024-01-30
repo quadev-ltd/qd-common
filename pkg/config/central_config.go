@@ -11,26 +11,20 @@ import (
 	"github.com/spf13/viper"
 )
 
-type address struct {
+// Address is the address of a service
+type Address struct {
 	Host string
 	Port string
-}
-
-type smtp struct {
-	Host     string
-	Port     string
-	Username string
-	Password string
 }
 
 // Config is the configuration of the application
 type Config struct {
 	TLSEnabled                bool    `mapstructure:"tls_enabled"`
 	EmailVerificationEndpoint string  `mapstructure:"email_verification_endpoint"`
-	GatewayService            address `mapstructure:"gateway_service"`
-	EmailService              address `mapstructure:"email_service"`
-	AuthenticationService     address `mapstructure:"authentication_service"`
-	VisualizationService      address `mapstructure:"visualization_service"`
+	GatewayService            Address `mapstructure:"gateway_service"`
+	EmailService              Address `mapstructure:"email_service"`
+	AuthenticationService     Address `mapstructure:"authentication_service"`
+	VisualizationService      Address `mapstructure:"visualization_service"`
 }
 
 // ConfigParameters is the parameters needed to load the configuration
