@@ -1,6 +1,6 @@
 package aws
 
-// AWSAppConfig is the configuration of the AWS AppConfig
+// AppConfig is the configuration of the AWS AppConfig
 type AppConfig struct {
 	Region                 string
 	ApplicationID          string

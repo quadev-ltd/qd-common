@@ -17,7 +17,8 @@ type loggerKey string
 // LoggerKey is the key for the logger in the context
 const LoggerKey loggerKey = "logger"
 
-// TODO unit test
+// TODO: unit test
+
 // CreateGinLoggerMiddleware is the middleware that adds a logger with a correlation ID to the context
 func CreateGinLoggerMiddleware(logFactory Factoryer) gin.HandlerFunc {
 	return func(c *gin.Context) {
