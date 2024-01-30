@@ -9,6 +9,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/appconfigdata"
 	"github.com/spf13/viper"
+
+	awsConstants "github.com/quadev-ltd/qd-common/pkg/aws"
 )
 
 // Address is the address of a service
@@ -38,7 +40,25 @@ type Parameters struct {
 }
 
 // Load loads the configuration from AWS AppConfig
-func (config *Config) Load(configParameters Parameters) error {
+func (config *Config) Load(env, awsKey, awsSecret string) error {
+	var awsDetails awsConstants.AppConfig
+	switch env {
+	case LocalEnvironment:
+		awsDetails = awsConstants.LocalConfig
+	case DevelopmentEnvironment:
+		awsDetails = awsConstants.DevConfig
+	default:
+		awsDetails = awsConstants.DevConfig
+	}
+
+	configParameters := Parameters{
+		Region:                 awsDetails.Region,
+		AWSKey:                 awsKey,
+		AWSSecret:              awsSecret,
+		ApplicationID:          awsDetails.ApplicationID,
+		EnvironmentID:          awsDetails.EnvironmentID,
+		ConfigurationProfileID: awsDetails.ConfigurationProfileID,
+	}
 	sess, _ := session.NewSession(
 		&aws.Config{
 			Region: aws.String(configParameters.Region),
