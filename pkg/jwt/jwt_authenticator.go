@@ -12,19 +12,19 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-// JWTAthenticatorer is an interface for JWTAuthenticator
-type JWTAthenticatorer interface {
+// Authenticatorer is an interface for JWTAuthenticator
+type Authenticatorer interface {
 	VerifyToken(token string) (*jwt.Token, error)
 	GetEmailFromToken(token *jwt.Token) (*string, error)
 	GetExpiryFromToken(token *jwt.Token) (*time.Time, error)
 }
 
-// JWTAuthenticator is responsible for generating and verifying JWT tokens
-type JWTAuthenticator struct {
+// Authenticator is responsible for generating and verifying JWT tokens
+type Authenticator struct {
 	publicKey *rsa.PublicKey
 }
 
-var _ JWTAthenticatorer = &JWTAuthenticator{}
+var _ Authenticatorer = &Authenticator{}
 
 // Key constants
 const (
@@ -56,18 +56,18 @@ func loadPublicKeyFromString(publicKeyPEM string) (*rsa.PublicKey, error) {
 }
 
 // NewJWTAuthenticator creates a new JWT authenticator
-func NewJWTAuthenticator(publicKeyString string) (JWTAthenticatorer, error) {
+func NewJWTAuthenticator(publicKeyString string) (Authenticatorer, error) {
 	publicKey, err := loadPublicKeyFromString(publicKeyString)
 	if err != nil {
 		return nil, err
 	}
-	return &JWTAuthenticator{
+	return &Authenticator{
 		publicKey,
 	}, nil
 }
 
 // VerifyToken verifies a JWT token
-func (authenticator *JWTAuthenticator) VerifyToken(tokenString string) (*jwt.Token, error) {
+func (authenticator *Authenticator) VerifyToken(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
@@ -91,7 +91,7 @@ func (authenticator *JWTAuthenticator) VerifyToken(tokenString string) (*jwt.Tok
 }
 
 // GetExpiryFromToken gets the expiry from a JWT token
-func (authenticator *JWTAuthenticator) GetExpiryFromToken(token *jwt.Token) (*time.Time, error) {
+func (authenticator *Authenticator) GetExpiryFromToken(token *jwt.Token) (*time.Time, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		return nil, errors.New("JWTAuthenticator: JWT Token claims are not valid")
@@ -105,7 +105,7 @@ func (authenticator *JWTAuthenticator) GetExpiryFromToken(token *jwt.Token) (*ti
 }
 
 // GetEmailFromToken gets the email from a JWT token
-func (authenticator *JWTAuthenticator) GetEmailFromToken(token *jwt.Token) (*string, error) {
+func (authenticator *Authenticator) GetEmailFromToken(token *jwt.Token) (*string, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		return nil, errors.New("JWTAuthenticator: JWT Token claims are not valid")

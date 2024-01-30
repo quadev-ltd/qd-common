@@ -27,8 +27,8 @@ type Config struct {
 	VisualizationService      Address `mapstructure:"visualization_service"`
 }
 
-// ConfigParameters is the parameters needed to load the configuration
-type ConfigParameters struct {
+// Parameters is the parameters needed to load the configuration
+type Parameters struct {
 	Region                 string
 	AWSKey                 string
 	AWSSecret              string
@@ -37,7 +37,8 @@ type ConfigParameters struct {
 	ConfigurationProfileID string
 }
 
-func (config *Config) Load(configParameters ConfigParameters) error {
+// Load loads the configuration from AWS AppConfig
+func (config *Config) Load(configParameters Parameters) error {
 	sess, _ := session.NewSession(
 		&aws.Config{
 			Region: aws.String(configParameters.Region),
