@@ -1,5 +1,11 @@
 package aws
 
+// AWSConfig is the configuration of the AWS
+type AWSConfig struct {
+	Key    string `mapstructure:"key"`
+	Secret string `mapstructure:"secret"`
+}
+
 // AppConfig is the configuration of the AWS AppConfig
 type AppConfig struct {
 	Region                 string
