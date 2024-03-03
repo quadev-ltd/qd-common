@@ -10,7 +10,7 @@ import (
 
 // TokenSignerer signs tokens
 type TokenSignerer interface {
-	SignToken(email string, expiry time.Time) (*string, error)
+	SignToken(email string, expiry time.Time, tokenType string) (*string, error)
 }
 
 // TokenSigner signs tokens
@@ -28,12 +28,13 @@ func NewTokenSigner(rsaPrivateKey *rsa.PrivateKey) TokenSignerer {
 }
 
 // SignToken signs a JWT token
-func (tokenSigner *TokenSigner) SignToken(email string, expiry time.Time) (*string, error) {
+func (tokenSigner *TokenSigner) SignToken(email string, expiry time.Time, tokenType string) (*string, error) {
 	tokenClaims := jwt.MapClaims{
 		EmailClaim:  email,
 		ExpiryClaim: expiry.Unix(),
 		"iat":       time.Now().Unix(),
 		"nonce":     uuid.New(),
+		tokenType:   tokenType,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, tokenClaims)
 	tokenString, err := token.SignedString(tokenSigner.rsaPrivateKey)
