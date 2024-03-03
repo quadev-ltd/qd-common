@@ -1,6 +1,8 @@
 package fs
 
-import "os"
+import (
+	"os"
+)
 
 type FileSystem interface {
 	Create(name string) (*os.File, error)

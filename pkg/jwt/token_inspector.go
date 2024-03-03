@@ -11,6 +11,7 @@ import (
 type TokenInspectorer interface {
 	GetEmailFromToken(token *jwt.Token) (*string, error)
 	GetExpiryFromToken(token *jwt.Token) (*time.Time, error)
+	GetTypeFromToken(token *jwt.Token) (*string, error)
 }
 
 type TokenInspector struct{}
@@ -38,6 +39,19 @@ func (inspector *TokenInspector) GetEmailFromToken(token *jwt.Token) (*string, e
 		return nil, errors.New("JWT Token claims are not valid")
 	}
 	email, ok := claims[EmailClaim].(string)
+	if !ok {
+		return nil, errors.New("JWT Token email is not valid")
+	}
+	return &email, nil
+}
+
+// GetEmailFromToken gets the email from a JWT token
+func (inspector *TokenInspector) GetTypeFromToken(token *jwt.Token) (*string, error) {
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, errors.New("JWT Token claims are not valid")
+	}
+	email, ok := claims[TypeClaim].(string)
 	if !ok {
 		return nil, errors.New("JWT Token email is not valid")
 	}
