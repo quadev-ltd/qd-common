@@ -19,22 +19,27 @@ func TestGetLoggerFromContext(t *testing.T) {
 		mockLogger := mock.NewMockLoggerer(controller)
 		ctx := context.WithValue(context.Background(), LoggerKey, mockLogger)
 
-		logger := GetLoggerFromContext(ctx)
+		logger, err := GetLoggerFromContext(ctx)
+		assert.NoError(t, err)
 		assert.Equal(t, mockLogger, logger, "Expected to get the mock logger from context")
 	})
 
 	t.Run("Context_Without_Logger", func(t *testing.T) {
 		ctx := context.Background()
 
-		logger := GetLoggerFromContext(ctx)
+		logger, err := GetLoggerFromContext(ctx)
+		assert.Error(t, err)
+		assert.Equal(t, "Logger not found in context", err.Error())
 		assert.Nil(t, logger, "Expected to get nil when the logger is not present in context")
 	})
 
 	t.Run("Context_With_Non_Loggerer_Value_For_LoggerKey", func(t *testing.T) {
 		ctx := context.WithValue(context.Background(), LoggerKey, "not-a-logger")
 
-		logger := GetLoggerFromContext(ctx)
-		assert.Nil(t, logger, "Expected to get nil when the context value is not a Loggerer")
+		logger, err := GetLoggerFromContext(ctx)
+		assert.Error(t, err)
+		assert.Equal(t, "Logger not found in context", err.Error())
+		assert.Nil(t, logger, "Expected to get nil when the logger is not present in context")
 	})
 }
 

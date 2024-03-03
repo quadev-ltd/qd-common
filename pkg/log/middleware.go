@@ -72,11 +72,11 @@ func CreateLoggerInterceptor(
 }
 
 // GetLoggerFromContext returns the logger from the context
-func GetLoggerFromContext(ctx context.Context) Loggerer {
+func GetLoggerFromContext(ctx context.Context) (Loggerer, error) {
 	if logger, ok := ctx.Value(LoggerKey).(Loggerer); ok {
-		return logger
+		return logger, nil
 	}
-	return nil
+	return nil, errors.New("Logger not found in context")
 }
 
 // TransferCorrelationIDToOutgoingContext transfers the correlation ID from the incoming context to the outgoing context
