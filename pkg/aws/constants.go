@@ -1,7 +1,7 @@
 package aws
 
-// AWSConfig is the configuration of the AWS
-type AWSConfig struct {
+// Config is the configuration of the AWS
+type Config struct {
 	Key    string `mapstructure:"key"`
 	Secret string `mapstructure:"secret"`
 }

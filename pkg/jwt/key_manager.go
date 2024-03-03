@@ -11,7 +11,7 @@ import (
 	"github.com/quadev-ltd/qd-common/pkg/fs"
 )
 
-// KeyManager handles key generation and retrieval
+// KeyManagerer handles key generation and retrieval
 type KeyManagerer interface {
 	GenerateNewKeyPair() error
 	GetRSAPrivateKey() *rsa.PrivateKey
@@ -19,6 +19,7 @@ type KeyManagerer interface {
 	GetPublicKey(ctx context.Context) (string, error)
 }
 
+// KeyManager is responsible for generating and managing RSA keys
 type KeyManager struct {
 	fileLocation string
 	privateKey   *rsa.PrivateKey

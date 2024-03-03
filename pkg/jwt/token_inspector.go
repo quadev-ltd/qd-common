@@ -7,13 +7,14 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-// TokenInspector inspects tokens
+// TokenInspectorer is TokenInspector interface
 type TokenInspectorer interface {
 	GetEmailFromToken(token *jwt.Token) (*string, error)
 	GetExpiryFromToken(token *jwt.Token) (*time.Time, error)
 	GetTypeFromToken(token *jwt.Token) (*string, error)
 }
 
+// TokenInspector is responsible for inspecting JWT token claims
 type TokenInspector struct{}
 
 var _ TokenInspectorer = &TokenInspector{}
@@ -45,7 +46,7 @@ func (inspector *TokenInspector) GetEmailFromToken(token *jwt.Token) (*string, e
 	return &email, nil
 }
 
-// GetEmailFromToken gets the email from a JWT token
+// GetTypeFromToken gets the email from a JWT token
 func (inspector *TokenInspector) GetTypeFromToken(token *jwt.Token) (*string, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
