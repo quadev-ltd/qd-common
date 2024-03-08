@@ -2,15 +2,13 @@ package jwt
 
 import (
 	"crypto/rsa"
-	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/google/uuid"
 )
 
 // TokenSignerer signs tokens
 type TokenSignerer interface {
-	SignToken(email string, expiry time.Time, tokenType TokenType) (*string, error)
+	SignToken(claims ...ClaimPair) (*string, error)
 }
 
 // TokenSigner signs tokens
@@ -20,6 +18,12 @@ type TokenSigner struct {
 
 var _ TokenSignerer = &TokenSigner{}
 
+// ClaimPair represents a key-value pair for a claim
+type ClaimPair struct {
+	Key   string
+	Value interface{}
+}
+
 // NewTokenSigner creates a new JWT signer
 func NewTokenSigner(rsaPrivateKey *rsa.PrivateKey) TokenSignerer {
 	return &TokenSigner{
@@ -28,13 +32,10 @@ func NewTokenSigner(rsaPrivateKey *rsa.PrivateKey) TokenSignerer {
 }
 
 // SignToken signs a JWT token
-func (tokenSigner *TokenSigner) SignToken(email string, expiry time.Time, tokenType TokenType) (*string, error) {
-	tokenClaims := jwt.MapClaims{
-		EmailClaim:    email,
-		ExpiryClaim:   expiry.Unix(),
-		IssuedAtClaim: time.Now().Unix(),
-		NonceClaim:    uuid.New(),
-		TypeClaim:     tokenType,
+func (tokenSigner *TokenSigner) SignToken(claims ...ClaimPair) (*string, error) {
+	tokenClaims := jwt.MapClaims{}
+	for _, claim := range claims {
+		tokenClaims[claim.Key] = claim.Value
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, tokenClaims)
 	tokenString, err := token.SignedString(tokenSigner.rsaPrivateKey)
