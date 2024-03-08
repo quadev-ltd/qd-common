@@ -10,6 +10,7 @@ import (
 
 	jwt "github.com/golang-jwt/jwt"
 	gomock "github.com/golang/mock/gomock"
+	token "github.com/quadev-ltd/qd-common/pkg/token"
 )
 
 // MockTokenInspectorer is a mock of TokenInspectorer interface.
@@ -35,47 +36,77 @@ func (m *MockTokenInspectorer) EXPECT() *MockTokenInspectorerMockRecorder {
 	return m.recorder
 }
 
-// GetEmailFromToken mocks base method.
-func (m *MockTokenInspectorer) GetEmailFromToken(token *jwt.Token) (*string, error) {
+// GetClaimFromToken mocks base method.
+func (m *MockTokenInspectorer) GetClaimFromToken(jwtToken *jwt.Token, claimKey string) (interface{}, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetEmailFromToken", token)
+	ret := m.ctrl.Call(m, "GetClaimFromToken", jwtToken, claimKey)
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetClaimFromToken indicates an expected call of GetClaimFromToken.
+func (mr *MockTokenInspectorerMockRecorder) GetClaimFromToken(jwtToken, claimKey interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClaimFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetClaimFromToken), jwtToken, claimKey)
+}
+
+// GetEmailFromToken mocks base method.
+func (m *MockTokenInspectorer) GetEmailFromToken(jwtToken *jwt.Token) (*string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetEmailFromToken", jwtToken)
 	ret0, _ := ret[0].(*string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetEmailFromToken indicates an expected call of GetEmailFromToken.
-func (mr *MockTokenInspectorerMockRecorder) GetEmailFromToken(token interface{}) *gomock.Call {
+func (mr *MockTokenInspectorerMockRecorder) GetEmailFromToken(jwtToken interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEmailFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetEmailFromToken), token)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEmailFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetEmailFromToken), jwtToken)
 }
 
 // GetExpiryFromToken mocks base method.
-func (m *MockTokenInspectorer) GetExpiryFromToken(token *jwt.Token) (*time.Time, error) {
+func (m *MockTokenInspectorer) GetExpiryFromToken(jwtToken *jwt.Token) (*time.Time, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetExpiryFromToken", token)
+	ret := m.ctrl.Call(m, "GetExpiryFromToken", jwtToken)
 	ret0, _ := ret[0].(*time.Time)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetExpiryFromToken indicates an expected call of GetExpiryFromToken.
-func (mr *MockTokenInspectorerMockRecorder) GetExpiryFromToken(token interface{}) *gomock.Call {
+func (mr *MockTokenInspectorerMockRecorder) GetExpiryFromToken(jwtToken interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetExpiryFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetExpiryFromToken), token)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetExpiryFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetExpiryFromToken), jwtToken)
 }
 
 // GetTypeFromToken mocks base method.
-func (m *MockTokenInspectorer) GetTypeFromToken(token *jwt.Token) (*string, error) {
+func (m *MockTokenInspectorer) GetTypeFromToken(jwtToken *jwt.Token) (*token.TokenType, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTypeFromToken", token)
-	ret0, _ := ret[0].(*string)
+	ret := m.ctrl.Call(m, "GetTypeFromToken", jwtToken)
+	ret0, _ := ret[0].(*token.TokenType)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetTypeFromToken indicates an expected call of GetTypeFromToken.
-func (mr *MockTokenInspectorerMockRecorder) GetTypeFromToken(token interface{}) *gomock.Call {
+func (mr *MockTokenInspectorerMockRecorder) GetTypeFromToken(jwtToken interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTypeFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetTypeFromToken), token)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTypeFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetTypeFromToken), jwtToken)
+}
+
+// GetUserIDFromToken mocks base method.
+func (m *MockTokenInspectorer) GetUserIDFromToken(jwtToken *jwt.Token) (*string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserIDFromToken", jwtToken)
+	ret0, _ := ret[0].(*string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserIDFromToken indicates an expected call of GetUserIDFromToken.
+func (mr *MockTokenInspectorerMockRecorder) GetUserIDFromToken(jwtToken interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserIDFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetUserIDFromToken), jwtToken)
 }
