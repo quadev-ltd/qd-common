@@ -6,6 +6,9 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/quadev-ltd/qd-common/pkg/token"
 )
 
 func TestTokenInspector(t *testing.T) {
@@ -27,22 +30,33 @@ func TestTokenInspector(t *testing.T) {
 	t.Run("Test_Claims", func(t *testing.T) {
 		email := "test@email.com"
 		expiry := time.Now().Add(2 * time.Hour)
-		tokenString, err := keySigner.SignToken(email, expiry, AccessTokenType)
+		userID := primitive.NewObjectID().Hex()
+		claims := []ClaimPair{
+			{EmailClaim, email},
+			{ExpiryClaim, expiry},
+			{TypeClaim, token.AccessTokenType},
+			{UserIDClaim, userID},
+		}
+		tokenString, err := keySigner.SignToken(claims...)
 		if err != nil {
 			t.Fatal(err)
 		}
-		token, err := tokenVerifier.Verify(*tokenString)
+		jwtToken, err := tokenVerifier.Verify(*tokenString)
+
 		assert.NoError(t, err)
-		emailClaim, err := tokenInspector.GetEmailFromToken(token)
+		emailClaim, err := tokenInspector.GetEmailFromToken(jwtToken)
 		assert.NoError(t, err)
 		assert.Equal(t, *emailClaim, email)
-		expiryClaim, err := tokenInspector.GetExpiryFromToken(token)
+		expiryClaim, err := tokenInspector.GetExpiryFromToken(jwtToken)
 		assert.NoError(t, err)
 		assert.Equal(t, (*expiryClaim).Day(), expiry.Day())
 		assert.Equal(t, (*expiryClaim).Hour(), expiry.Hour())
-		typeClaim, err := tokenInspector.GetTypeFromToken(token)
+		typeClaim, err := tokenInspector.GetTypeFromToken(jwtToken)
 		assert.NoError(t, err)
-		assert.Equal(t, string(AccessTokenType), *typeClaim)
+		assert.Equal(t, token.AccessTokenType, *typeClaim)
+		userIDClaim, err := tokenInspector.GetUserIDFromToken(jwtToken)
+		assert.NoError(t, err)
+		assert.Equal(t, userID, *userIDClaim)
 	})
 
 }

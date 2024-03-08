@@ -6,7 +6,6 @@ package mock
 
 import (
 	reflect "reflect"
-	time "time"
 
 	gomock "github.com/golang/mock/gomock"
 	jwt "github.com/quadev-ltd/qd-common/pkg/jwt"
@@ -36,16 +35,20 @@ func (m *MockTokenSignerer) EXPECT() *MockTokenSignererMockRecorder {
 }
 
 // SignToken mocks base method.
-func (m *MockTokenSignerer) SignToken(email string, expiry time.Time, tokenType jwt.TokenType) (*string, error) {
+func (m *MockTokenSignerer) SignToken(claims ...jwt.ClaimPair) (*string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SignToken", email, expiry, tokenType)
+	varargs := []interface{}{}
+	for _, a := range claims {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "SignToken", varargs...)
 	ret0, _ := ret[0].(*string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SignToken indicates an expected call of SignToken.
-func (mr *MockTokenSignererMockRecorder) SignToken(email, expiry, tokenType interface{}) *gomock.Call {
+func (mr *MockTokenSignererMockRecorder) SignToken(claims ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SignToken", reflect.TypeOf((*MockTokenSignerer)(nil).SignToken), email, expiry, tokenType)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SignToken", reflect.TypeOf((*MockTokenSignerer)(nil).SignToken), claims...)
 }
