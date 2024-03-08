@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/quadev-ltd/qd-common/pkg/token"
 )
@@ -30,7 +29,7 @@ func TestTokenInspector(t *testing.T) {
 	t.Run("Test_Claims", func(t *testing.T) {
 		email := "test@email.com"
 		expiry := time.Now().Add(2 * time.Hour)
-		userID := primitive.NewObjectID().Hex()
+		userID := "primitive.NewObjectID().Hex()"
 		claims := []ClaimPair{
 			{EmailClaim, email},
 			{ExpiryClaim, expiry},
