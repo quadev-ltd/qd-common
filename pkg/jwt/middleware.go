@@ -14,6 +14,7 @@ type ContextKey string
 
 const (
 	ClaimsContextKey ContextKey = "ContextClaimsKey"
+	JWTTokenKey      ContextKey = "JWTTokenKey"
 )
 
 // TokenClaims is the claims for a JWT token
