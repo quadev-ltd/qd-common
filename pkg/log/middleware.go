@@ -47,6 +47,13 @@ func AddNewCorrelationIDToContext(context *gin.Context) {
 	ctxWithCorrelationID := AddCorrelationIDToIncomingContext(context.Request.Context(), correlationID)
 	context.Request = context.Request.WithContext(ctxWithCorrelationID)
 
+	contextWithCorrelationID, err := TransferCorrelationIDToOutgoingContext(context.Request.Context())
+	if err != nil {
+		context.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	context.Request = context.Request.WithContext(contextWithCorrelationID)
+
 	// Continue processing the request
 	context.Next()
 }
