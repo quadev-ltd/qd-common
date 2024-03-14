@@ -10,6 +10,7 @@ import (
 
 	jwt "github.com/golang-jwt/jwt"
 	gomock "github.com/golang/mock/gomock"
+	jwt0 "github.com/quadev-ltd/qd-common/pkg/jwt"
 	token "github.com/quadev-ltd/qd-common/pkg/token"
 )
 
@@ -49,6 +50,21 @@ func (m *MockTokenInspectorer) GetClaimFromToken(jwtToken *jwt.Token, claimKey s
 func (mr *MockTokenInspectorerMockRecorder) GetClaimFromToken(jwtToken, claimKey interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClaimFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetClaimFromToken), jwtToken, claimKey)
+}
+
+// GetClaimsFromToken mocks base method.
+func (m *MockTokenInspectorer) GetClaimsFromToken(token *jwt.Token) (*jwt0.TokenClaims, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetClaimsFromToken", token)
+	ret0, _ := ret[0].(*jwt0.TokenClaims)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetClaimsFromToken indicates an expected call of GetClaimsFromToken.
+func (mr *MockTokenInspectorerMockRecorder) GetClaimsFromToken(token interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClaimsFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetClaimsFromToken), token)
 }
 
 // GetEmailFromToken mocks base method.
