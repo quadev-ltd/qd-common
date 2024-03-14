@@ -91,10 +91,15 @@ func TransferCorrelationIDToOutgoingContext(ctx context.Context) (context.Contex
 
 // AddCorrelationIDToOutgoingContext adds the correlation ID to the context
 func AddCorrelationIDToOutgoingContext(ctx context.Context, correlationID string) context.Context {
-	md := metadata.New(map[string]string{
+	existingMD, ok := metadata.FromOutgoingContext(ctx)
+	if !ok {
+		existingMD = metadata.New(map[string]string{})
+	}
+	newMD := metadata.New(map[string]string{
 		CorrelationIDKey: correlationID,
 	})
-	return metadata.NewOutgoingContext(ctx, md)
+	mergedMD := metadata.Join(existingMD, newMD)
+	return metadata.NewOutgoingContext(ctx, mergedMD)
 }
 
 // AddCorrelationIDToIncomingContext adds the correlation ID to the context
