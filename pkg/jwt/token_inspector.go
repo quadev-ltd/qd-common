@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -16,6 +17,7 @@ type TokenInspectorer interface {
 	GetExpiryFromToken(jwtToken *jwt.Token) (*time.Time, error)
 	GetTypeFromToken(jwtToken *jwt.Token) (*token.TokenType, error)
 	GetUserIDFromToken(jwtToken *jwt.Token) (*string, error)
+	GetClaimsFromToken(token *jwt.Token) (*TokenClaims, error)
 }
 
 // TokenInspector is responsible for inspecting JWT token claims
@@ -85,4 +87,30 @@ func (inspector *TokenInspector) GetUserIDFromToken(
 		return nil, errors.New("JWT Token type is not of valid type")
 	}
 	return &userID, nil
+}
+
+// GetClaimsFromToken gets the email from a JWT token
+func (inspector *TokenInspector) GetClaimsFromToken(token *jwt.Token) (*TokenClaims, error) {
+	email, err := inspector.GetEmailFromToken(token)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting email from token: %v", err)
+	}
+	tokenType, err := inspector.GetTypeFromToken(token)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting type claim from token: %v", err)
+	}
+	expiry, err := inspector.GetExpiryFromToken(token)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting expiry claim from token: %v", err)
+	}
+	userID, err := inspector.GetUserIDFromToken(token)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting expiry claim from token: %v", err)
+	}
+	return &TokenClaims{
+		Email:  *email,
+		Type:   *tokenType,
+		Expiry: *expiry,
+		UserID: *userID,
+	}, nil
 }
