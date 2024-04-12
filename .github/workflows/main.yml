@@ -34,7 +34,7 @@ jobs:
 
       - name: Add proto files
         run: |
-          git config --global --add safe.directory /__w/qd-authentication-api/qd-authentication-api
+          git config --global --add safe.directory /__w/qd-common/qd-common
           git submodule update --init --recursive
 
       - name: Generate protobuf code
