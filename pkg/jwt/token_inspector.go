@@ -25,6 +25,7 @@ type TokenInspector struct{}
 
 var _ TokenInspectorer = &TokenInspector{}
 
+// GetClaimFromToken gets a claim from a JWT token
 func (inspector *TokenInspector) GetClaimFromToken(token *jwt.Token, claimKey string) (interface{}, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {

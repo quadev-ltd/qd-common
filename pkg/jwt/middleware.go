@@ -10,8 +10,10 @@ import (
 	commonToken "github.com/quadev-ltd/qd-common/pkg/token"
 )
 
+// ContextKey is the key for the context
 type ContextKey string
 
+// Context keys
 const (
 	ClaimsContextKey ContextKey = "ContextClaimsKey"
 	JWTTokenKey      ContextKey = "JWTTokenKey"
