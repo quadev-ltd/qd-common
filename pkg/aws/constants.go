@@ -16,16 +16,16 @@ type AppConfig struct {
 
 // LocalConfig is the configuration for the development environment
 var LocalConfig = AppConfig{
-	Region:                 "us-east-1",
-	ApplicationID:          "222hh4s",
-	EnvironmentID:          "i0lf5xh",
-	ConfigurationProfileID: "mfgfaot",
+	Region:                 "eu-west-1",
+	ApplicationID:          "40kjucg",
+	EnvironmentID:          "b46nulj",
+	ConfigurationProfileID: "q93kels",
 }
 
 // DevConfig is the configuration for the development environment
 var DevConfig = AppConfig{
-	Region:                 "us-east-1",
-	ApplicationID:          "222hh4s",
-	EnvironmentID:          "i0lf5xh",
-	ConfigurationProfileID: "mfgfaot",
+	Region:                 "eu-west-1",
+	ApplicationID:          "40kjucg",
+	EnvironmentID:          "b46nulj",
+	ConfigurationProfileID: "q93kels",
 }
