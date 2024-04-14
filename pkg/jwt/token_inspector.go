@@ -15,7 +15,7 @@ type TokenInspectorer interface {
 	GetClaimFromToken(jwtToken *jwt.Token, claimKey string) (interface{}, error)
 	GetEmailFromToken(jwtToken *jwt.Token) (*string, error)
 	GetExpiryFromToken(jwtToken *jwt.Token) (*time.Time, error)
-	GetTypeFromToken(jwtToken *jwt.Token) (*token.TokenType, error)
+	GetTypeFromToken(jwtToken *jwt.Token) (*token.Type, error)
 	GetUserIDFromToken(jwtToken *jwt.Token) (*string, error)
 	GetClaimsFromToken(token *jwt.Token) (*TokenClaims, error)
 }
@@ -62,7 +62,7 @@ func (inspector *TokenInspector) GetEmailFromToken(jwtToken *jwt.Token) (*string
 }
 
 // GetTypeFromToken gets the type from a JWT token
-func (inspector *TokenInspector) GetTypeFromToken(jwtToken *jwt.Token) (*token.TokenType, error) {
+func (inspector *TokenInspector) GetTypeFromToken(jwtToken *jwt.Token) (*token.Type, error) {
 	typeValue, err := inspector.GetClaimFromToken(jwtToken, TypeClaim)
 	if err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func (inspector *TokenInspector) GetTypeFromToken(jwtToken *jwt.Token) (*token.T
 	if !ok {
 		return nil, errors.New("JWT Token type is not of valid type")
 	}
-	typeValueTokenType := token.TokenType(typeValueString)
+	typeValueTokenType := token.Type(typeValueString)
 	return &typeValueTokenType, nil
 }
 

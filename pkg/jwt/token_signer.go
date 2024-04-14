@@ -49,7 +49,7 @@ func (tokenSigner *TokenSigner) SignToken(claims ...ClaimPair) (*string, error) 
 			tokenClaims[claim.Key] = v.Unix()
 		case string:
 			tokenClaims[claim.Key] = string(v)
-		case token.TokenType:
+		case token.Type:
 			tokenClaims[claim.Key] = string(v)
 		default:
 			return nil, fmt.Errorf("invalid claim value type: %v", reflect.TypeOf(claim.Value))

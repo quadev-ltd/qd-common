@@ -98,10 +98,10 @@ func (mr *MockTokenInspectorerMockRecorder) GetExpiryFromToken(jwtToken interfac
 }
 
 // GetTypeFromToken mocks base method.
-func (m *MockTokenInspectorer) GetTypeFromToken(jwtToken *jwt.Token) (*token.TokenType, error) {
+func (m *MockTokenInspectorer) GetTypeFromToken(jwtToken *jwt.Token) (*token.Type, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTypeFromToken", jwtToken)
-	ret0, _ := ret[0].(*token.TokenType)
+	ret0, _ := ret[0].(*token.Type)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
