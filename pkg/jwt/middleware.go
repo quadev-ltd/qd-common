@@ -40,7 +40,7 @@ func AddAuthorizationMetadataToContext(ctx context.Context, token string) contex
 	return metadata.NewOutgoingContext(ctx, mergedMD)
 }
 
-// GetLoggerFromContext returns the logger from the context
+// GetClaimsFromContext gets the claims from the context
 func GetClaimsFromContext(ctx context.Context) (*TokenClaims, error) {
 	if claims, ok := ctx.Value(ClaimsContextKey).(*TokenClaims); ok {
 		return claims, nil
