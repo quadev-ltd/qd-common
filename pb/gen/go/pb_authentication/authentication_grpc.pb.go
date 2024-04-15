@@ -38,7 +38,7 @@ const (
 type AuthenticationServiceClient interface {
 	GetPublicKey(ctx context.Context, in *GetPublicKeyRequest, opts ...grpc.CallOption) (*GetPublicKeyResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*BaseResponse, error)
+	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmaiResponse, error)
 	ResendEmailVerification(ctx context.Context, in *ResendEmailVerificationRequest, opts ...grpc.CallOption) (*BaseResponse, error)
 	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
@@ -75,8 +75,8 @@ func (c *authenticationServiceClient) Register(ctx context.Context, in *Register
 	return out, nil
 }
 
-func (c *authenticationServiceClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*BaseResponse, error) {
-	out := new(BaseResponse)
+func (c *authenticationServiceClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmaiResponse, error) {
+	out := new(VerifyEmaiResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_VerifyEmail_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -162,7 +162,7 @@ func (c *authenticationServiceClient) GetUserProfile(ctx context.Context, in *Ge
 type AuthenticationServiceServer interface {
 	GetPublicKey(context.Context, *GetPublicKeyRequest) (*GetPublicKeyResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
-	VerifyEmail(context.Context, *VerifyEmailRequest) (*BaseResponse, error)
+	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmaiResponse, error)
 	ResendEmailVerification(context.Context, *ResendEmailVerificationRequest) (*BaseResponse, error)
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*AuthenticateResponse, error)
@@ -184,7 +184,7 @@ func (UnimplementedAuthenticationServiceServer) GetPublicKey(context.Context, *G
 func (UnimplementedAuthenticationServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*BaseResponse, error) {
+func (UnimplementedAuthenticationServiceServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmaiResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) ResendEmailVerification(context.Context, *ResendEmailVerificationRequest) (*BaseResponse, error) {
