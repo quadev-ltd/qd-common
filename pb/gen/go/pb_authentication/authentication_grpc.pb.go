@@ -37,7 +37,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthenticationServiceClient interface {
 	GetPublicKey(ctx context.Context, in *GetPublicKeyRequest, opts ...grpc.CallOption) (*GetPublicKeyResponse, error)
-	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*BaseResponse, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*BaseResponse, error)
 	ResendEmailVerification(ctx context.Context, in *ResendEmailVerificationRequest, opts ...grpc.CallOption) (*BaseResponse, error)
 	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
@@ -66,8 +66,8 @@ func (c *authenticationServiceClient) GetPublicKey(ctx context.Context, in *GetP
 	return out, nil
 }
 
-func (c *authenticationServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*BaseResponse, error) {
-	out := new(BaseResponse)
+func (c *authenticationServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_Register_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -161,7 +161,7 @@ func (c *authenticationServiceClient) GetUserProfile(ctx context.Context, in *Ge
 // for forward compatibility
 type AuthenticationServiceServer interface {
 	GetPublicKey(context.Context, *GetPublicKeyRequest) (*GetPublicKeyResponse, error)
-	Register(context.Context, *RegisterRequest) (*BaseResponse, error)
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*BaseResponse, error)
 	ResendEmailVerification(context.Context, *ResendEmailVerificationRequest) (*BaseResponse, error)
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
@@ -181,7 +181,7 @@ type UnimplementedAuthenticationServiceServer struct {
 func (UnimplementedAuthenticationServiceServer) GetPublicKey(context.Context, *GetPublicKeyRequest) (*GetPublicKeyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPublicKey not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) Register(context.Context, *RegisterRequest) (*BaseResponse, error) {
+func (UnimplementedAuthenticationServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*BaseResponse, error) {
