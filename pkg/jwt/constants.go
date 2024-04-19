@@ -3,7 +3,7 @@ package jwt
 // Key constants
 const (
 	EmailClaim         = "email"
-	ExpiryClaim        = "expiry"
+	ExpiryClaim        = "exp"
 	IssuedAtClaim      = "iat"
 	NonceClaim         = "nonce"
 	TypeClaim          = "type"
