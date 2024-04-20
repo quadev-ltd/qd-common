@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/google/uuid"
 
 	"github.com/quadev-ltd/qd-common/pkg/token"
 )
@@ -41,7 +40,6 @@ func NewTokenSigner(rsaPrivateKey *rsa.PrivateKey) TokenSignerer {
 func (tokenSigner *TokenSigner) SignToken(claims ...ClaimPair) (*string, error) {
 	tokenClaims := jwt.MapClaims{
 		IssuedAtClaim: time.Now().Unix(),
-		NonceClaim:    uuid.New(),
 	}
 	for _, claim := range claims {
 		switch v := claim.Value.(type) {

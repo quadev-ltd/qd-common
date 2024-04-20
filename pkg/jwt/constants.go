@@ -5,7 +5,6 @@ const (
 	EmailClaim         = "email"
 	ExpiryClaim        = "exp"
 	IssuedAtClaim      = "iat"
-	NonceClaim         = "nonce"
 	TypeClaim          = "type"
 	UserIDClaim        = "user_id"
 	PublicKeyFileName  = "public.pem"
