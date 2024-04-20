@@ -117,7 +117,7 @@ func (inspector *TokenInspector) GetClaimsFromToken(token *jwt.Token) (*TokenCla
 	}, nil
 }
 
-// GetExpiryFromTokenString gets the email from a JWT token ßstringå
+// GetClaimsFromTokenString gets the email from a JWT token ßstringå
 func (inspector *TokenInspector) GetClaimsFromTokenString(tokenStr string) (*TokenClaims, error) {
 	// Parse the token
 	token, _, err := new(jwt.Parser).ParseUnverified(tokenStr, jwt.MapClaims{})
