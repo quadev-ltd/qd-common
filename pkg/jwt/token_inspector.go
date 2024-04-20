@@ -18,6 +18,7 @@ type TokenInspectorer interface {
 	GetTypeFromToken(jwtToken *jwt.Token) (*token.Type, error)
 	GetUserIDFromToken(jwtToken *jwt.Token) (*string, error)
 	GetClaimsFromToken(token *jwt.Token) (*TokenClaims, error)
+	GetClaimsFromTokenString(tokenStr string) (*TokenClaims, error)
 }
 
 // TokenInspector is responsible for inspecting JWT token claims
@@ -114,4 +115,15 @@ func (inspector *TokenInspector) GetClaimsFromToken(token *jwt.Token) (*TokenCla
 		Expiry: *expiry,
 		UserID: *userID,
 	}, nil
+}
+
+// GetExpiryFromTokenString gets the email from a JWT token ßstringå
+func (inspector *TokenInspector) GetClaimsFromTokenString(tokenStr string) (*TokenClaims, error) {
+	// Parse the token
+	token, _, err := new(jwt.Parser).ParseUnverified(tokenStr, jwt.MapClaims{})
+	if err != nil {
+		return nil, err
+	}
+
+	return inspector.GetClaimsFromToken(token)
 }
