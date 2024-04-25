@@ -7,6 +7,6 @@ type Type string
 const (
 	EmailVerificationTokenType Type = "EmailVerificationTokenType"
 	ResetPasswordTokenType     Type = "ResetPasswordTokenType"
-	AccessTokenType            Type = "AccessTokenType"
+	AuthTokenType              Type = "AuthTokenType"
 	RefreshTokenType           Type = "RefreshTokenType"
 )

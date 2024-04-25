@@ -33,7 +33,7 @@ func TestTokenInspector(t *testing.T) {
 		claims := []ClaimPair{
 			{EmailClaim, email},
 			{ExpiryClaim, expiry},
-			{TypeClaim, token.AccessTokenType},
+			{TypeClaim, token.AuthTokenType},
 			{UserIDClaim, userID},
 		}
 		tokenString, err := keySigner.SignToken(claims...)
@@ -52,7 +52,7 @@ func TestTokenInspector(t *testing.T) {
 		assert.Equal(t, (*expiryClaim).Hour(), expiry.Hour())
 		typeClaim, err := tokenInspector.GetTypeFromToken(jwtToken)
 		assert.NoError(t, err)
-		assert.Equal(t, token.AccessTokenType, *typeClaim)
+		assert.Equal(t, token.AuthTokenType, *typeClaim)
 		userIDClaim, err := tokenInspector.GetUserIDFromToken(jwtToken)
 		assert.NoError(t, err)
 		assert.Equal(t, userID, *userIDClaim)
