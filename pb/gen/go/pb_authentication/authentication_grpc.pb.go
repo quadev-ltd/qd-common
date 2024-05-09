@@ -24,6 +24,7 @@ const (
 	AuthenticationService_VerifyEmail_FullMethodName              = "/pb_authentication.AuthenticationService/VerifyEmail"
 	AuthenticationService_ResendEmailVerification_FullMethodName  = "/pb_authentication.AuthenticationService/ResendEmailVerification"
 	AuthenticationService_Authenticate_FullMethodName             = "/pb_authentication.AuthenticationService/Authenticate"
+	AuthenticationService_AuthenticateWithFirebase_FullMethodName = "/pb_authentication.AuthenticationService/AuthenticateWithFirebase"
 	AuthenticationService_RefreshToken_FullMethodName             = "/pb_authentication.AuthenticationService/RefreshToken"
 	AuthenticationService_ForgotPassword_FullMethodName           = "/pb_authentication.AuthenticationService/ForgotPassword"
 	AuthenticationService_VerifyResetPasswordToken_FullMethodName = "/pb_authentication.AuthenticationService/VerifyResetPasswordToken"
@@ -41,6 +42,7 @@ type AuthenticationServiceClient interface {
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
 	ResendEmailVerification(ctx context.Context, in *ResendEmailVerificationRequest, opts ...grpc.CallOption) (*BaseResponse, error)
 	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
+	AuthenticateWithFirebase(ctx context.Context, in *AuthenticateWithFirebaseRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
 	ForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*BaseResponse, error)
 	VerifyResetPasswordToken(ctx context.Context, in *VerifyResetPasswordTokenRequest, opts ...grpc.CallOption) (*VerifyResetPasswordTokenResponse, error)
@@ -96,6 +98,15 @@ func (c *authenticationServiceClient) ResendEmailVerification(ctx context.Contex
 func (c *authenticationServiceClient) Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error) {
 	out := new(AuthenticateResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_Authenticate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticationServiceClient) AuthenticateWithFirebase(ctx context.Context, in *AuthenticateWithFirebaseRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error) {
+	out := new(AuthenticateResponse)
+	err := c.cc.Invoke(ctx, AuthenticationService_AuthenticateWithFirebase_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -165,6 +176,7 @@ type AuthenticationServiceServer interface {
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*AuthenticateResponse, error)
 	ResendEmailVerification(context.Context, *ResendEmailVerificationRequest) (*BaseResponse, error)
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
+	AuthenticateWithFirebase(context.Context, *AuthenticateWithFirebaseRequest) (*AuthenticateResponse, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*AuthenticateResponse, error)
 	ForgotPassword(context.Context, *ForgotPasswordRequest) (*BaseResponse, error)
 	VerifyResetPasswordToken(context.Context, *VerifyResetPasswordTokenRequest) (*VerifyResetPasswordTokenResponse, error)
@@ -192,6 +204,9 @@ func (UnimplementedAuthenticationServiceServer) ResendEmailVerification(context.
 }
 func (UnimplementedAuthenticationServiceServer) Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Authenticate not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) AuthenticateWithFirebase(context.Context, *AuthenticateWithFirebaseRequest) (*AuthenticateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AuthenticateWithFirebase not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*AuthenticateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
@@ -310,6 +325,24 @@ func _AuthenticationService_Authenticate_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthenticationServiceServer).Authenticate(ctx, req.(*AuthenticateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthenticationService_AuthenticateWithFirebase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthenticateWithFirebaseRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).AuthenticateWithFirebase(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticationService_AuthenticateWithFirebase_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).AuthenticateWithFirebase(ctx, req.(*AuthenticateWithFirebaseRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -448,6 +481,10 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Authenticate",
 			Handler:    _AuthenticationService_Authenticate_Handler,
+		},
+		{
+			MethodName: "AuthenticateWithFirebase",
+			Handler:    _AuthenticationService_AuthenticateWithFirebase_Handler,
 		},
 		{
 			MethodName: "RefreshToken",
