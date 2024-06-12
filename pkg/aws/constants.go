@@ -14,8 +14,11 @@ type AppConfig struct {
 	ConfigurationProfileID string
 }
 
-const ApplicationID = "wwrvnjk"
-const Region = "eu-west-1"
+// Application ID and Region
+const (
+	ApplicationID = "wwrvnjk"
+	Region        = "eu-west-1"
+)
 
 // LocalConfig is the configuration for the local/development environment
 var LocalConfig = AppConfig{
