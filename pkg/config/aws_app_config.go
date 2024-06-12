@@ -47,6 +47,8 @@ func (config *Config) Load(env, awsKey, awsSecret string) error {
 		awsDetails = awsConstants.LocalConfig
 	case DevelopmentEnvironment:
 		awsDetails = awsConstants.DevConfig
+	case ProductionEnvironment:
+		awsDetails = awsConstants.ProdConfig
 	default:
 		awsDetails = awsConstants.DevConfig
 	}
