@@ -61,7 +61,7 @@ func (config *Config) Load(env, awsKey, awsSecret string) error {
 		EnvironmentID:          awsDetails.EnvironmentID,
 		ConfigurationProfileID: awsDetails.ConfigurationProfileID,
 	}
-	sess, _ := session.NewSession(
+	sess, err := session.NewSession(
 		&aws.Config{
 			Region: aws.String(configParameters.Region),
 			Credentials: credentials.NewStaticCredentials(
@@ -71,16 +71,22 @@ func (config *Config) Load(env, awsKey, awsSecret string) error {
 			),
 		},
 	)
+	if err != nil {
+		return err
+	}
 
 	svc := appconfigdata.New(sess)
 
-	startSessionOutput, _ := svc.StartConfigurationSession(
+	startSessionOutput, err := svc.StartConfigurationSession(
 		&appconfigdata.StartConfigurationSessionInput{
 			ApplicationIdentifier:          aws.String(configParameters.ApplicationID),
 			EnvironmentIdentifier:          aws.String(configParameters.EnvironmentID),
 			ConfigurationProfileIdentifier: aws.String(configParameters.ConfigurationProfileID),
 		},
 	)
+	if err != nil {
+		return err
+	}
 
 	latestConfigOutput, err := svc.GetLatestConfiguration(&appconfigdata.GetLatestConfigurationInput{
 		ConfigurationToken: startSessionOutput.InitialConfigurationToken,
