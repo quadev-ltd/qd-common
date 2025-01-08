@@ -21,6 +21,7 @@ type Address struct {
 
 // Config is the configuration of the application
 type Config struct {
+	AppName                   string  `mapstructure:"app_name"`
 	TLSEnabled                bool    `mapstructure:"tls_enabled"`
 	EmailVerificationEndpoint string  `mapstructure:"email_verification_endpoint"`
 	GatewayService            Address `mapstructure:"gateway_service"`
