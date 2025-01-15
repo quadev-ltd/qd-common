@@ -9,4 +9,5 @@ const (
 	ResetPasswordTokenType     Type = "ResetPasswordTokenType"
 	AuthTokenType              Type = "AuthTokenType"
 	RefreshTokenType           Type = "RefreshTokenType"
+	AllTokenType               Type = "AllTokenType"
 )
