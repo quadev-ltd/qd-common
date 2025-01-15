@@ -31,6 +31,7 @@ const (
 	AuthenticationService_ResetPassword_FullMethodName            = "/pb_authentication.AuthenticationService/ResetPassword"
 	AuthenticationService_UpdateUserProfile_FullMethodName        = "/pb_authentication.AuthenticationService/UpdateUserProfile"
 	AuthenticationService_GetUserProfile_FullMethodName           = "/pb_authentication.AuthenticationService/GetUserProfile"
+	AuthenticationService_DeleteAccount_FullMethodName            = "/pb_authentication.AuthenticationService/DeleteAccount"
 )
 
 // AuthenticationServiceClient is the client API for AuthenticationService service.
@@ -49,6 +50,7 @@ type AuthenticationServiceClient interface {
 	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*BaseResponse, error)
 	UpdateUserProfile(ctx context.Context, in *UpdateUserProfileRequest, opts ...grpc.CallOption) (*UpdateUserProfileResponse, error)
 	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error)
+	DeleteAccount(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*BaseResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -167,6 +169,15 @@ func (c *authenticationServiceClient) GetUserProfile(ctx context.Context, in *Ge
 	return out, nil
 }
 
+func (c *authenticationServiceClient) DeleteAccount(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*BaseResponse, error) {
+	out := new(BaseResponse)
+	err := c.cc.Invoke(ctx, AuthenticationService_DeleteAccount_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthenticationServiceServer is the server API for AuthenticationService service.
 // All implementations must embed UnimplementedAuthenticationServiceServer
 // for forward compatibility
@@ -183,6 +194,7 @@ type AuthenticationServiceServer interface {
 	ResetPassword(context.Context, *ResetPasswordRequest) (*BaseResponse, error)
 	UpdateUserProfile(context.Context, *UpdateUserProfileRequest) (*UpdateUserProfileResponse, error)
 	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
+	DeleteAccount(context.Context, *DeleteAccountRequest) (*BaseResponse, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -225,6 +237,9 @@ func (UnimplementedAuthenticationServiceServer) UpdateUserProfile(context.Contex
 }
 func (UnimplementedAuthenticationServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) DeleteAccount(context.Context, *DeleteAccountRequest) (*BaseResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAccount not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
 
@@ -455,6 +470,24 @@ func _AuthenticationService_GetUserProfile_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthenticationService_DeleteAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).DeleteAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticationService_DeleteAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).DeleteAccount(ctx, req.(*DeleteAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthenticationService_ServiceDesc is the grpc.ServiceDesc for AuthenticationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -509,6 +542,10 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserProfile",
 			Handler:    _AuthenticationService_GetUserProfile_Handler,
+		},
+		{
+			MethodName: "DeleteAccount",
+			Handler:    _AuthenticationService_DeleteAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
