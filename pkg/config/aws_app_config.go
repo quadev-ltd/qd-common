@@ -27,7 +27,7 @@ type Config struct {
 	GatewayService            Address `mapstructure:"gateway_service"`
 	EmailService              Address `mapstructure:"email_service"`
 	AuthenticationService     Address `mapstructure:"authentication_service"`
-	VisualizationService      Address `mapstructure:"visualization_service"`
+	ImageAnalysisService      Address `mapstructure:"image_analysis_service"`
 }
 
 // Parameters is the parameters needed to load the configuration
