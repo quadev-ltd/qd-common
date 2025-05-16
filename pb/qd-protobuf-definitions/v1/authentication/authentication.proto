@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package pb_authentication;
+
+option go_package = "./gen/go/pb_authentication";
+
+
+service AuthenticationService {
+    rpc GetPublicKey(GetPublicKeyRequest) returns (GetPublicKeyResponse);
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc VerifyEmail(VerifyEmailRequest) returns (AuthenticateResponse);
+    rpc ResendEmailVerification(ResendEmailVerificationRequest) returns (BaseResponse);
+    rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse);
+    rpc AuthenticateWithFirebase(AuthenticateWithFirebaseRequest) returns (AuthenticateResponse);
+    rpc RefreshToken(RefreshTokenRequest) returns (AuthenticateResponse);
+    rpc ForgotPassword(ForgotPasswordRequest) returns (BaseResponse);
+    rpc VerifyResetPasswordToken(VerifyResetPasswordTokenRequest) returns (VerifyResetPasswordTokenResponse);
+    rpc ResetPassword(ResetPasswordRequest) returns (BaseResponse);
+    rpc UpdateUserProfile(UpdateUserProfileRequest) returns (UpdateUserProfileResponse);
+    rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
+    rpc DeleteAccount(DeleteAccountRequest) returns (BaseResponse);
+}
+
+message GetPublicKeyResponse {
+    string publicKey = 1;
+}
+
+message GetPublicKeyRequest {}
+
+message RegisterRequest {
+    string email = 1;
+    string password = 2;
+    string firstName = 3;
+    string lastName = 4;
+    google.protobuf.Timestamp dateOfBirth = 5;
+}
+
+message RegisterResponse {
+    bool success = 1;
+    string message = 2;
+    User user = 3;
+}
+
+message BaseResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message VerifyEmailRequest {
+    string userID = 1;
+    string verificationToken = 2;
+}
+
+message ResendEmailVerificationRequest {
+    string userID = 1;
+}
+
+message AuthenticateRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message AuthenticateResponse {
+    string authToken = 1;
+    string refreshToken = 2;
+}
+
+message AuthenticateWithFirebaseRequest {
+    string idToken = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+}
+
+message RefreshTokenRequest {}
+
+message ForgotPasswordRequest {
+    string email = 1;
+}
+
+message VerifyResetPasswordTokenRequest {
+    string userID = 1;
+    string token = 2;
+}
+
+message VerifyResetPasswordTokenResponse {
+    bool isValid = 1;
+    string message = 2;
+  }
+
+message ResetPasswordRequest {
+    string userID = 1;
+    string token = 2;
+    string newPassword = 3;
+}
+
+enum AccountStatus {
+    UNKNOWN = 0;
+    VERIFIED = 1;
+    UNVERIFIED = 2;
+}
+
+message User {
+    string userID = 1;
+    string email = 2;
+    string firstName = 3;
+    string lastName = 4;
+    google.protobuf.Timestamp dateOfBirth = 5;
+    google.protobuf.Timestamp registrationDate = 6;
+    string accountStatus = 7;
+}
+
+message UpdateUserProfileRequest {
+    string firstName = 1;
+    string lastName = 2;
+    google.protobuf.Timestamp dateOfBirth = 3;
+}
+  
+message UpdateUserProfileResponse {
+    User user = 1;
+}
+
+message GetUserProfileRequest {}
+  
+message GetUserProfileResponse {
+    User user = 1;
+}
+ 
+message DeleteAccountRequest {}
