@@ -9,7 +9,8 @@ service ImageAnalysisService {
 }
 
 message ImagePromptRequest {
-    bytes imageData = 2;
+    bytes imageData = 1;
+    string mimeType = 2;
     string prompt = 3;
 }
 
