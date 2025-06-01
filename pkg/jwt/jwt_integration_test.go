@@ -36,7 +36,7 @@ func TestTokenInspector(t *testing.T) {
 			{ExpiryClaim, expiry},
 			{TypeClaim, token.AuthTokenType},
 			{UserIDClaim, userID},
-			{HasPaidFeatures, hasPaidFeatures},
+			{HasPaidFeaturesClaim, hasPaidFeatures},
 		}
 		tokenString, err := keySigner.SignToken(claims...)
 		if err != nil {

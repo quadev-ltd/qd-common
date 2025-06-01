@@ -94,7 +94,7 @@ func (inspector *TokenInspector) GetUserIDFromToken(
 
 // GetHasPaidFeaturesFromToken gets the hasPaidFeatures flag from a JWT token
 func (inspector *TokenInspector) GetHasPaidFeaturesFromToken(jwtToken *jwt.Token) (*bool, error) {
-	hasPaidFeaturesClaim, err := inspector.GetClaimFromToken(jwtToken, HasPaidFeatures)
+	hasPaidFeaturesClaim, err := inspector.GetClaimFromToken(jwtToken, HasPaidFeaturesClaim)
 	if err != nil {
 		return nil, err
 	}
@@ -121,11 +121,11 @@ func (inspector *TokenInspector) GetClaimsFromToken(token *jwt.Token) (*TokenCla
 	}
 	userID, err := inspector.GetUserIDFromToken(token)
 	if err != nil {
-		return nil, fmt.Errorf("Error getting expiry claim from token: %v", err)
+		return nil, fmt.Errorf("Error getting user ID from token: %v", err)
 	}
 	hasPaidFeatures, err := inspector.GetHasPaidFeaturesFromToken(token)
 	if err != nil {
-		return nil, fmt.Errorf("Error getting expiry claim from token: %v", err)
+		return nil, fmt.Errorf("Error getting has paid features claim from token: %v", err)
 	}
 	return &TokenClaims{
 		Email:           *email,
