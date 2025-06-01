@@ -48,11 +48,14 @@ func CreateTLSListener(grpcServerAddress, certFilePath, keyFilePath string, tlsE
 			ClientCAs:    certPool,
 		}
 		listener, err = tls.Listen("tcp", grpcServerAddress, tlsConfig)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to listen: %v", err)
+		}
 	} else {
 		listener, err = net.Listen("tcp", grpcServerAddress)
-	}
-	if err != nil {
-		return nil, fmt.Errorf("Failed to listen: %v", err)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to listen: %v", err)
+		}
 	}
 
 	return listener, nil

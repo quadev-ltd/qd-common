@@ -21,10 +21,11 @@ const (
 
 // TokenClaims is the claims for a JWT token
 type TokenClaims struct {
-	Email  string
-	Type   commonToken.Type
-	Expiry time.Time
-	UserID string
+	Email           string
+	Type            commonToken.Type
+	Expiry          time.Time
+	UserID          string
+	HasPaidFeatures bool
 }
 
 // AddAuthorizationMetadataToContext adds the authorization Bearer token to the context

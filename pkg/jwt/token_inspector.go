@@ -17,6 +17,7 @@ type TokenInspectorer interface {
 	GetExpiryFromToken(jwtToken *jwt.Token) (*time.Time, error)
 	GetTypeFromToken(jwtToken *jwt.Token) (*token.Type, error)
 	GetUserIDFromToken(jwtToken *jwt.Token) (*string, error)
+	GetHasPaidFeaturesFromToken(jwtToken *jwt.Token) (*bool, error)
 	GetClaimsFromToken(token *jwt.Token) (*TokenClaims, error)
 	GetClaimsFromTokenString(tokenStr string) (*TokenClaims, error)
 }
@@ -91,6 +92,19 @@ func (inspector *TokenInspector) GetUserIDFromToken(
 	return &userID, nil
 }
 
+// GetHasPaidFeaturesFromToken gets the hasPaidFeatures flag from a JWT token
+func (inspector *TokenInspector) GetHasPaidFeaturesFromToken(jwtToken *jwt.Token) (*bool, error) {
+	hasPaidFeaturesClaim, err := inspector.GetClaimFromToken(jwtToken, HasPaidFeatures)
+	if err != nil {
+		return nil, err
+	}
+	hasPaidFeatures, ok := hasPaidFeaturesClaim.(bool)
+	if !ok {
+		return nil, errors.New("JWT Token hasPaidFeatures claim is not of valid type")
+	}
+	return &hasPaidFeatures, nil
+}
+
 // GetClaimsFromToken gets the email from a JWT token
 func (inspector *TokenInspector) GetClaimsFromToken(token *jwt.Token) (*TokenClaims, error) {
 	email, err := inspector.GetEmailFromToken(token)
@@ -109,11 +123,16 @@ func (inspector *TokenInspector) GetClaimsFromToken(token *jwt.Token) (*TokenCla
 	if err != nil {
 		return nil, fmt.Errorf("Error getting expiry claim from token: %v", err)
 	}
+	hasPaidFeatures, err := inspector.GetHasPaidFeaturesFromToken(token)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting expiry claim from token: %v", err)
+	}
 	return &TokenClaims{
-		Email:  *email,
-		Type:   *tokenType,
-		Expiry: *expiry,
-		UserID: *userID,
+		Email:           *email,
+		Type:            *tokenType,
+		Expiry:          *expiry,
+		UserID:          *userID,
+		HasPaidFeatures: *hasPaidFeatures,
 	}, nil
 }
 

@@ -30,11 +30,13 @@ func TestTokenInspector(t *testing.T) {
 		email := "test@email.com"
 		expiry := time.Now().Add(2 * time.Hour)
 		userID := "primitive.NewObjectID().Hex()"
+		hasPaidFeatures := true
 		claims := []ClaimPair{
 			{EmailClaim, email},
 			{ExpiryClaim, expiry},
 			{TypeClaim, token.AuthTokenType},
 			{UserIDClaim, userID},
+			{HasPaidFeatures, hasPaidFeatures},
 		}
 		tokenString, err := keySigner.SignToken(claims...)
 		if err != nil {
@@ -56,6 +58,9 @@ func TestTokenInspector(t *testing.T) {
 		userIDClaim, err := tokenInspector.GetUserIDFromToken(jwtToken)
 		assert.NoError(t, err)
 		assert.Equal(t, userID, *userIDClaim)
+		hasPaidFeaturesClaim, err := tokenInspector.GetHasPaidFeaturesFromToken(jwtToken)
+		assert.NoError(t, err)
+		assert.Equal(t, hasPaidFeatures, *hasPaidFeaturesClaim)
 	})
 
 }
