@@ -112,6 +112,21 @@ func (mr *MockTokenInspectorerMockRecorder) GetExpiryFromToken(jwtToken interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetExpiryFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetExpiryFromToken), jwtToken)
 }
 
+// GetHasPaidFeaturesFromToken mocks base method.
+func (m *MockTokenInspectorer) GetHasPaidFeaturesFromToken(jwtToken *jwt.Token) (*bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHasPaidFeaturesFromToken", jwtToken)
+	ret0, _ := ret[0].(*bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetHasPaidFeaturesFromToken indicates an expected call of GetHasPaidFeaturesFromToken.
+func (mr *MockTokenInspectorerMockRecorder) GetHasPaidFeaturesFromToken(jwtToken interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHasPaidFeaturesFromToken", reflect.TypeOf((*MockTokenInspectorer)(nil).GetHasPaidFeaturesFromToken), jwtToken)
+}
+
 // GetTypeFromToken mocks base method.
 func (m *MockTokenInspectorer) GetTypeFromToken(jwtToken *jwt.Token) (*token.Type, error) {
 	m.ctrl.T.Helper()
